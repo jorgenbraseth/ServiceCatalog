@@ -6,6 +6,5 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
-public interface ServiceRepo extends GraphRepository<ServiceInfo> {
+public interface ServiceInfoNeo4JRepo extends GraphRepository<ServiceInfo> {
 }
