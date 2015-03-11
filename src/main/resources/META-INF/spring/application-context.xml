@@ -21,10 +21,8 @@
 
     <bean id="graphDatabaseService" class="org.springframework.data.neo4j.rest.SpringRestGraphDatabase">
         <constructor-arg value="http://localhost:7474/db/data/" index="0"/>
-    <!-- for running against a server requiring authentication
-        <constructor-arg value="username" index="1"/>
-        <constructor-arg value="password" index="2"/>
-    -->
+        <constructor-arg value="neo4j" index="1"/>
+        <constructor-arg value="servicecatalog" index="2"/>
     </bean>
     <context:component-scan base-package="no.braseth"/>
 
