@@ -1,5 +1,6 @@
 package no.braseth.core;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.neo4j.annotation.EndNode;
 import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.RelationshipEntity;
@@ -11,8 +12,10 @@ public class ProvidesServiceInfo {
     @GraphId
     public Long id;
 
-    @StartNode public ProcessInfo process;
-    @EndNode public ServiceInfo service;
+    @StartNode private ProcessInfo process;
+
+    @EndNode
+    private ServiceInfo service;
 
     public ProvidesServiceInfo(ServiceInfo service, ProcessInfo process, String url) {
         this.service = service;
@@ -22,6 +25,17 @@ public class ProvidesServiceInfo {
 
     public ProvidesServiceInfo() { /* For Jackson */ }
 
-    public String url;
+    private String url;
 
+    public String getUrl() {
+        return url;
+    }
+
+    public ProcessInfo getProcess() {
+        return process;
+    }
+
+    public ServiceInfo getService() {
+        return service;
+    }
 }

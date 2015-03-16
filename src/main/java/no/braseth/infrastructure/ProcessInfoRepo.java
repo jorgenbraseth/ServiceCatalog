@@ -2,8 +2,9 @@ package no.braseth.infrastructure;
 
 import no.braseth.core.ApplicationInfo;
 import no.braseth.core.ProcessInfo;
+import no.braseth.dto.ProcessRegistration;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.neo4j.template.Neo4jOperations;
+import org.springframework.data.neo4j.support.Neo4jTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +25,5 @@ public class ProcessInfoRepo {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    @Transactional
-    public void deleteAll(){
-        repo.deleteAll();
-    }
 
 }

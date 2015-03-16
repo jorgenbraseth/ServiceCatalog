@@ -1,6 +1,7 @@
 package no.braseth.core;
 
 import org.neo4j.graphdb.Direction;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 import org.springframework.data.neo4j.annotation.RelatedTo;
@@ -32,11 +33,6 @@ public class ProcessInfo {
 
     @RelatedTo(type="CONSUMES_SERVICE", direction = OUTGOING)
     Set<ServiceInfo> consumedServices = new HashSet<>();
-
-    public ProcessInfo id(Long id) {
-        this.id = id;
-        return this;
-    }
 
     public ProcessInfo description(String description) {
         this.description = description;

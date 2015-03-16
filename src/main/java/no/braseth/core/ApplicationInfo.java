@@ -1,10 +1,7 @@
 package no.braseth.core;
 
 import org.neo4j.graphdb.Direction;
-import org.springframework.data.neo4j.annotation.Fetch;
-import org.springframework.data.neo4j.annotation.GraphId;
-import org.springframework.data.neo4j.annotation.NodeEntity;
-import org.springframework.data.neo4j.annotation.RelatedTo;
+import org.springframework.data.neo4j.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,6 +15,8 @@ public class ApplicationInfo {
 
     @GraphId
     public  Long id;
+
+    @Indexed(unique = true)
     public  String name;
     public  String description;
 

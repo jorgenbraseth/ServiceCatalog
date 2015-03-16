@@ -74,7 +74,8 @@ public class ServiceCatalog extends Application<ServiceCatalogConfiguration> {
         environment.jersey().register(new ApplicationResource(applicationInfoRepo));
 
         final ProcessInfoRepo processInfoRepo = context.getBean(ProcessInfoRepo.class);
-        environment.jersey().register(new ProcessResource(processInfoRepo));
+        ProcessRegistrationService processRegistrationService = context.getBean(ProcessRegistrationService.class);
+        environment.jersey().register(new ProcessResource(processInfoRepo,processRegistrationService));
     }
 }
 

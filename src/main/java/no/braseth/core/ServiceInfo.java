@@ -14,6 +14,7 @@ public class ServiceInfo {
     public Long id;
 
     @Fetch
+    @Indexed(unique = true)
     public String name;
 
     @RelatedToVia(type="PROVIDES_SERVICE")

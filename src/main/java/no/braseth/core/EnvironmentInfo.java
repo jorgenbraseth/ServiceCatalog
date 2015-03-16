@@ -2,6 +2,7 @@ package no.braseth.core;
 
 import org.neo4j.graphdb.Direction;
 import org.springframework.data.neo4j.annotation.GraphId;
+import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
 import org.springframework.data.neo4j.annotation.RelatedTo;
 
@@ -14,6 +15,8 @@ import static org.neo4j.graphdb.Direction.INCOMING;
 public class EnvironmentInfo {
     @GraphId
     public Long id;
+
+    @Indexed(unique = true)
     public String name;
 
     @RelatedTo(type="RUNS_IN_ENVIRONMENT", direction = INCOMING)
