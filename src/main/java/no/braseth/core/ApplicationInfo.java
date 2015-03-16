@@ -17,15 +17,15 @@ import static org.neo4j.graphdb.Direction.INCOMING;
 public class ApplicationInfo {
 
     @GraphId
-    private Long id;
-    private String name;
-    private String description;
+    public  Long id;
+    public  String name;
+    public  String description;
 
     @RelatedTo(type = "IS_PART_OF_APPLICATION_GROUP", direction = INCOMING)
-    private ApplicationGroupInfo applicationGroup;
+    public  ApplicationGroupInfo applicationGroup;
 
     @RelatedTo(type = "IS_INSTANCE_OF_APPLICATION", direction = INCOMING)
-    private Set<ProcessInfo> processes = new HashSet<>();
+    private  Set<ProcessInfo> processes = new HashSet<>();
 
     public ApplicationInfo() { /* For Jackson */ }
 
@@ -37,5 +37,9 @@ public class ApplicationInfo {
     public ApplicationInfo applicationGroup(ApplicationGroupInfo group) {
         this.applicationGroup = group;
         return this;
+    }
+
+    public Set<ProcessInfo> getProcesses() {
+        return processes;
     }
 }

@@ -9,14 +9,14 @@ import org.springframework.data.neo4j.annotation.StartNode;
 public class RunsOnServerInfo {
 
     @GraphId
-    Long id;
+    public Long id;
 
     @StartNode
-    ProcessInfo process;
+    public ProcessInfo process;
     @EndNode
-    ServerInfo server;
+    public ServerInfo server;
 
-    Integer port;
+    public Integer port;
 
     public ProcessInfo getProcess() {
         return process;

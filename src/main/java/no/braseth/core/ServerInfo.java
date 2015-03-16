@@ -13,8 +13,8 @@ import static org.neo4j.graphdb.Direction.INCOMING;
 @NodeEntity
 public class ServerInfo {
     @GraphId
-    Long id;
-    String name;
+    public Long id;
+    public String name;
 
     @RelatedTo(type="RUNS_ON_SERVER", direction = INCOMING)
     Set<ProcessInfo> runningProcesses = new HashSet<>();
@@ -25,4 +25,5 @@ public class ServerInfo {
         this.name = name;
         this.runningProcesses = runningProcesses;
     }
+
 }

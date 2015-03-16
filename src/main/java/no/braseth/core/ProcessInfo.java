@@ -58,32 +58,36 @@ public class ProcessInfo {
         return this;
     }
 
-    public Long id() {
+    public void addProvidedService(ServiceInfo service, String url){
+        ProvidesServiceInfo psi = new ProvidesServiceInfo(service, this, url);
+        providedServices.add(psi);
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public String description() {
+    public String getDescription() {
         return description;
     }
 
-    public ServerInfo server() {
+    public ServerInfo getServer() {
         return server;
     }
 
-    public EnvironmentInfo environment() {
+    public EnvironmentInfo getEnvironment() {
         return environment;
     }
 
-    public ApplicationInfo application() {
+    public ApplicationInfo getApplication() {
         return application;
     }
 
-    public Set<ServiceInfo> consumedServices() {
-        return consumedServices;
+    public Set<ProvidesServiceInfo> getProvidedServices() {
+        return providedServices;
     }
 
-    public void addProvidedService(ServiceInfo service, String url){
-        ProvidesServiceInfo psi = new ProvidesServiceInfo(service, this, url);
-//        providedServices.add(psi);
+    public Set<ServiceInfo> getConsumedServices() {
+        return consumedServices;
     }
 }

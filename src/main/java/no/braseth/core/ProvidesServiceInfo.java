@@ -9,10 +9,10 @@ import org.springframework.data.neo4j.annotation.StartNode;
 public class ProvidesServiceInfo {
 
     @GraphId
-    Long id;
+    public Long id;
 
-    @EndNode ServiceInfo service;
-    @StartNode ProcessInfo process;
+    @StartNode public ProcessInfo process;
+    @EndNode public ServiceInfo service;
 
     public ProvidesServiceInfo(ServiceInfo service, ProcessInfo process, String url) {
         this.service = service;
@@ -20,6 +20,8 @@ public class ProvidesServiceInfo {
         this.url = url;
     }
 
-    String url;
+    public ProvidesServiceInfo() { /* For Jackson */ }
+
+    public String url;
 
 }

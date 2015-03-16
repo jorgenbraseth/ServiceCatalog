@@ -13,8 +13,8 @@ import static org.neo4j.graphdb.Direction.INCOMING;
 @NodeEntity
 public class EnvironmentInfo {
     @GraphId
-    Long id;
-    String name;
+    public Long id;
+    public String name;
 
     @RelatedTo(type="RUNS_IN_ENVIRONMENT", direction = INCOMING)
     Set<ProcessInfo> processesRunning = new HashSet<>();

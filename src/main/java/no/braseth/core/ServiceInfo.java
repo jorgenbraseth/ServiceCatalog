@@ -11,16 +11,16 @@ import static org.neo4j.graphdb.Direction.INCOMING;
 public class ServiceInfo {
 
     @GraphId
-    Long id;
+    public Long id;
 
     @Fetch
-    String name;
+    public String name;
 
     @RelatedToVia(type="PROVIDES_SERVICE")
-    Set<ProvidesServiceInfo> providingProcesses = new HashSet<>();
+    public Set<ProvidesServiceInfo> providingProcesses = new HashSet<>();
 
     @RelatedTo(type="CONSUMES_SERVICE", direction = INCOMING)
-    Set<ProcessInfo> consumingProcesses = new HashSet<>();
+    public Set<ProcessInfo> consumingProcesses = new HashSet<>();
 
 
 }

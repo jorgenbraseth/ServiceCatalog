@@ -7,7 +7,9 @@ import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import no.braseth.resources.ApplicationResource;
+import no.braseth.resources.ProcessResource;
 import no.braseth.resources.ServiceResource;
+import org.jfairy.Fairy;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.data.neo4j.repository.GraphRepository;
@@ -45,16 +47,16 @@ public class ServiceCatalog extends Application<ServiceCatalogConfiguration> {
         EnvironmentInfo environment = new EnvironmentInfo("Production");
         ApplicationInfo application = new ApplicationInfo("Main Application","The most important application of them all");
 
-        ProcessInfo p1 = new ProcessInfo()
-                .application(application)
-                .description("Kul prosess as")
+        ProcessInfo p1 = MockDataGenerator.process()
                 .server(server)
-                .environment(environment);
+                .environment(environment)
+                .application(application);
 
-        ServiceInfo s1 = new ServiceInfo();
-        p1.addProvidedService(s1,"http://and.stuff");
-        ServiceInfo s2 = new ServiceInfo();
-        p1.consumedServices().add(s2);
+        ServiceInfo providedService = MockDataGenerator.service();
+        neo4j.save(providedService);
+
+        p1.addProvidedService(providedService, Fairy.create().company().url());
+        p1.getConsumedServices().add(MockDataGenerator.service());
 
         neo4j.save(p1);
     }
@@ -63,10 +65,16 @@ public class ServiceCatalog extends Application<ServiceCatalogConfiguration> {
     public void run(ServiceCatalogConfiguration configuration,
                     Environment environment) {
 
-        final ServiceInfoRepo serviceInfoRepo = context.getBean(ServiceInfoRepo.class);
-        final ApplicationInfoRepo applicationInfoRepo = context.getBean(ApplicationInfoRepo.class);
         environment.jersey().setUrlPattern("/api/*");
+
+        final ServiceInfoRepo serviceInfoRepo = context.getBean(ServiceInfoRepo.class);
         environment.jersey().register(new ServiceResource(serviceInfoRepo));
+
+        final ApplicationInfoRepo applicationInfoRepo = context.getBean(ApplicationInfoRepo.class);
         environment.jersey().register(new ApplicationResource(applicationInfoRepo));
+
+        final ProcessInfoRepo processInfoRepo = context.getBean(ProcessInfoRepo.class);
+        environment.jersey().register(new ProcessResource(processInfoRepo));
     }
 }
+

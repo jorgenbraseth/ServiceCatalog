@@ -12,8 +12,12 @@ import static org.neo4j.graphdb.Direction.INCOMING;
 @NodeEntity
 public class ApplicationGroupInfo {
     @GraphId
-    Long id;
+    public Long id;
 
     @RelatedTo(type="IS_PART_OF_APPLICATION_GROUP", direction = INCOMING)
-    Set<ApplicationInfo> applications = new HashSet<>();
+    private Set<ApplicationInfo> applications = new HashSet<>();
+
+    public Set<ApplicationInfo> getApplications() {
+        return applications;
+    }
 }
