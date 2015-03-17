@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Set;
 
 @XmlRootElement
-@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class ProcessRegistration {
     String description;

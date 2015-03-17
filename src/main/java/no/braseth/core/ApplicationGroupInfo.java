@@ -14,6 +14,8 @@ public class ApplicationGroupInfo {
     @GraphId
     public Long id;
 
+    public String name;
+
     @RelatedTo(type="IS_PART_OF_APPLICATION_GROUP", direction = INCOMING)
     private Set<ApplicationInfo> applications = new HashSet<>();
 

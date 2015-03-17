@@ -17,9 +17,11 @@ public class ServiceInfo {
     @Indexed(unique = true)
     public String name;
 
-    @RelatedToVia(type="PROVIDES_SERVICE")
+    @Fetch
+    @RelatedToVia(type="PROVIDES_SERVICE", direction = INCOMING)
     public Set<ProvidesServiceInfo> providingProcesses = new HashSet<>();
 
+    @Fetch
     @RelatedTo(type="CONSUMES_SERVICE", direction = INCOMING)
     public Set<ProcessInfo> consumingProcesses = new HashSet<>();
 

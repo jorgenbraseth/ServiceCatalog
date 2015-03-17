@@ -1,11 +1,13 @@
 package no.braseth.resources;
 
 import no.braseth.core.ServiceInfo;
+import no.braseth.dto.BasicServiceInfo;
 import no.braseth.infrastructure.ServiceInfoRepo;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
@@ -21,9 +23,16 @@ public class ServiceResource {
     }
 
     @GET
-    @Transactional
-    public List<ServiceInfo> listAll() {
+    public List<BasicServiceInfo> listAll() {
         return repo.findAll();
     }
+
+
+    @GET
+    @Path("/{name}")
+    public BasicServiceInfo findService(@PathParam("name") String name) {
+        return repo.find(name);
+    }
+
 
 }

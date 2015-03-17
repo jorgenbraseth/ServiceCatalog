@@ -39,8 +39,6 @@ public class ProcessRegistrationService {
                 );
             }
 
-            repo.save(processInfo);
-
             for (String serviceName : process.getProvidedServices().keySet()) {
                 ServiceInfo service = repo.getOrCreateService(serviceName);
                 ProvidesServiceInfo providesServiceInfo = new ProvidesServiceInfo(service, processInfo, process.getProvidedServices().get(serviceName));
@@ -50,9 +48,8 @@ public class ProcessRegistrationService {
 
             repo.save(processInfo);
 
-            repo.addCalculatedValuesForApplications();
-
         }
+        repo.addCalculatedValuesForApplications();
     }
 
 
