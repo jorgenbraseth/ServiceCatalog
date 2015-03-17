@@ -1,5 +1,9 @@
 package no.braseth.resources;
 
+import com.codahale.metrics.annotation.Timed;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 import no.braseth.core.ServiceInfo;
 import no.braseth.dto.BasicServiceInfo;
 import no.braseth.infrastructure.ServiceInfoRepo;
@@ -14,6 +18,7 @@ import java.util.List;
 
 @Path("/services")
 @Produces(MediaType.APPLICATION_JSON)
+@Api("/services")
 public class ServiceResource {
 
     private ServiceInfoRepo repo;
@@ -23,6 +28,8 @@ public class ServiceResource {
     }
 
     @GET
+    @ApiOperation("Lists all registered services")
+    @Timed
     public List<BasicServiceInfo> listAll() {
         return repo.findAll();
     }
@@ -30,7 +37,9 @@ public class ServiceResource {
 
     @GET
     @Path("/{name}")
-    public BasicServiceInfo findService(@PathParam("name") String name) {
+    @ApiOperation("Retrieves a single service")
+    @Timed
+    public BasicServiceInfo findService(@ApiParam @PathParam("name") String name) {
         return repo.find(name);
     }
 

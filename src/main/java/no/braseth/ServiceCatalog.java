@@ -30,8 +30,6 @@ import java.util.concurrent.TimeUnit;
 public class ServiceCatalog extends Application<ServiceCatalogConfiguration> {
     private static ApplicationContext context;
 
-    public static MetricRegistry METRICS = new MetricRegistry();
-
     public static void main(String[] args) throws Exception {
         context = new ClassPathXmlApplicationContext("META-INF/spring/application-context.xml");
         new ServiceCatalog().run(args);
@@ -45,15 +43,6 @@ public class ServiceCatalog extends Application<ServiceCatalogConfiguration> {
     @Override
     public void initialize(Bootstrap<ServiceCatalogConfiguration> bootstrap) {
         bootstrap.addBundle(new AssetsBundle("/webapp", "/", "index.html"));
-
-        ConsoleReporter reporter = ConsoleReporter.forRegistry(METRICS)
-                .convertRatesTo(TimeUnit.SECONDS)
-                .convertDurationsTo(TimeUnit.MILLISECONDS)
-                .build();
-        reporter.start(30, TimeUnit.SECONDS);
-
-
-//        createMockData();
     }
 
     private void swaggerOn(Environment environment){
@@ -74,29 +63,6 @@ public class ServiceCatalog extends Application<ServiceCatalogConfiguration> {
         SwaggerConfig config = ConfigFactory.config();
         config.setApiVersion("1.0.1");
         config.setBasePath("http://localhost:8080/api");
-    }
-
-    private void createMockData() {
-        Neo4jTemplate neo4j = context.getBean(Neo4jTemplate.class);
-
-        neo4j.query("MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r", null);
-
-        ServerInfo server = new ServerInfo("Server numero uno");
-        EnvironmentInfo environment = new EnvironmentInfo("Production");
-        ApplicationInfo application = new ApplicationInfo("Main Application","The most important application of them all");
-
-        ProcessInfo p1 = MockDataGenerator.process()
-                .server(server)
-                .environment(environment)
-                .application(application);
-
-        ServiceInfo providedService = MockDataGenerator.service();
-        neo4j.save(providedService);
-
-        p1.getConsumedServices().add(MockDataGenerator.service());
-
-        neo4j.save(p1);
-        neo4j.save(new ProvidesServiceInfo(providedService, p1, Fairy.create().company().url()));
     }
 
     @Override

@@ -1,5 +1,9 @@
 package no.braseth.resources;
 
+import com.codahale.metrics.annotation.Timed;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 import no.braseth.core.ProcessInfo;
 import no.braseth.core.ProcessRegistrationService;
 import no.braseth.dto.ProcessRegistration;
@@ -15,6 +19,7 @@ import java.util.List;
 
 @Path("/processes")
 @Produces(MediaType.APPLICATION_JSON)
+@Api("/processes")
 public class ProcessResource {
 
     private ProcessInfoRepo repo;
@@ -27,14 +32,17 @@ public class ProcessResource {
 
     @GET
     @Transactional
+    @ApiOperation(value = "Gets all registered processes", response = ProcessInfo.class, responseContainer = "List")
+    @Timed
     public List<ProcessInfo> listAll() {
         return repo.findAll();
     }
 
     @POST
-    public void registerProcess(ProcessRegistration... registrations) {
+    @ApiOperation("Accepts one or more processes for registration")
+    @Timed
+    public void registerProcess(@ApiParam ProcessRegistration... registrations) {
         processRegisterService.registerNewProcesses(registrations);
-
     }
 
 }

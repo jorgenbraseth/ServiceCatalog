@@ -1,5 +1,6 @@
 package no.braseth.resources;
 
+import com.codahale.metrics.annotation.Timed;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
@@ -30,12 +31,14 @@ public class ApplicationResource {
 
     @GET
     @ApiOperation(value = "Retrieves all applications", response = ApplicationInfo.class, responseContainer = "List")
+    @Timed
     public List<ApplicationInfo> listAll() {
         return repo.findAll();
     }
 
     @POST
     @ApiOperation(value = "Accepts one or more applications for registration")
+    @Timed
     public void registerApplication(@ApiParam ApplicationRegistration... registrations) {
         repo.registerNewApplication(registrations);
     }

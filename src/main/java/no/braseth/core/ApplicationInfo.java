@@ -18,7 +18,7 @@ public class ApplicationInfo {
     public  String name;
     public  String description;
 
-    @RelatedTo(type = "IS_PART_OF_APPLICATION_GROUP", direction = INCOMING)
+    @RelatedTo(type = "IS_PART_OF_APPLICATION_GROUP", direction = OUTGOING)
     public  ApplicationGroupInfo applicationGroup;
 
     @RelatedTo(type = "IS_INSTANCE_OF_APPLICATION", direction = INCOMING)

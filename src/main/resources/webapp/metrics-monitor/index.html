@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Server Metrics</title>
+
+    <!-- must include jquery -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+    <!-- must include bootstrap -->
+    <link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+
+
+    <!--  And include the metrics-watcher library -->
+    <script src="lib/metrics-watcher.js"></script>
+    <!-- And include the metrics stylesheet -->
+    <link href="lib/metrics-watcher-style.css" rel="stylesheet">
+
+    <!--  Here is the sample data - this would normally come from an Ajax call to the Metrics servlet -->
+    <!--<script src="lib/example-metrics.js"></script>-->
+
+    <script>
+        // See example-metrics.js for sample of the Metrics-servlet format
+        function addGraphs() {
+            metricsWatcher.addTimer("timer1", "no.braseth.resources.ApplicationResource", "listAll", 100, "List all applications", "requests", 100);
+            metricsWatcher.addTimer("timer2", "no.braseth.resources.ApplicationResource", "registerApplication", 100, "Register application", "requests", 100);
+
+            metricsWatcher.addTimer("timer3", "no.braseth.resources.ServiceResource", "listAll", 100, "List all Services", "requests", 100);
+            metricsWatcher.addTimer("timer4", "no.braseth.resources.ServiceResource", "findService", 100, "Register service", "requests", 100);
+
+            metricsWatcher.addTimer("timer5", "no.braseth.resources.ProcessResource", "listAll", 100, "List all processes", "requests", 100);
+            metricsWatcher.addTimer("timer6", "no.braseth.resources.ProcessResource", "registerProcess", 100, "Register process", "requests", 100);
+        }
+
+
+
+        $(document).ready(function () {
+            addGraphs();
+            metricsWatcher.initGraphs();
+            keepUpdatingGraphs();
+        });
+
+        function keepUpdatingGraphs() {
+            downloadMetricData();
+            setTimeout(keepUpdatingGraphs, 1000); // 1 minute
+        }
+
+        function downloadMetricData() {
+            url = "http://localhost:8081/metrics";
+            $.ajax({
+                contentType: "application/json",
+                url: url,
+                success: function (data) {
+                    metricsWatcher.updateGraphs(data);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    //alert("Error - " + xhr.status + "Message: " + thrownError);
+                    metricsWatcher.initGraphs();
+                },
+                async: false
+            });
+        }
+    </script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-static-top" role="navigation">
+    <a class="btn navbar-btn" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="glyphicon-bar"></span>
+        <span class="glyphicon-bar"></span>
+        <span class="glyphicon-bar"></span>
+    </a>
+    <a class="navbar-brand" href="#">Server Metrics</a>
+
+    <div class="navbar-collapse">
+        <ul class="nav"></ul>
+    </div>
+</nav>
+
+<div class="container mainContent">
+    <div class="row">
+        <div id="timer1"></div>
+    </div>
+    <div class="row">
+        <div id="timer2"></div>
+    </div>
+    <br/>
+    <div class="row">
+        <div id="timer3"></div>
+    </div>
+    <div class="row">
+        <div id="timer4"></div>
+    </div>
+    <br/>
+    <div class="row">
+        <div id="timer5"></div>
+    </div>
+    <div class="row">
+        <div id="timer6"></div>
+    </div>
+    <br/>
+</div>
+</body>
+</html>
