@@ -1,11 +1,6 @@
 package no.braseth.core;
 
-import org.neo4j.graphdb.Direction;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.data.neo4j.annotation.GraphId;
-import org.springframework.data.neo4j.annotation.NodeEntity;
-import org.springframework.data.neo4j.annotation.RelatedTo;
-import org.springframework.data.neo4j.annotation.RelatedToVia;
+import org.springframework.data.neo4j.annotation.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -17,6 +12,7 @@ public class ProcessInfo {
     @GraphId
     Long id;
 
+    @Indexed(unique = true)
     String description;
 
     @RelatedTo(type="RUNS_ON_SERVER", direction = OUTGOING)

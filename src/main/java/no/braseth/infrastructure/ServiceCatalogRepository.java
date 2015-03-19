@@ -1,25 +1,37 @@
 package no.braseth.infrastructure;
 
-import com.codahale.metrics.Timer;
 import com.codahale.metrics.annotation.Timed;
-import no.braseth.ServiceCatalog;
 import no.braseth.core.*;
+import no.braseth.dto.ProcessRegistration;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Transaction;
+import org.neo4j.rest.graphdb.RestAPI;
+import org.neo4j.rest.graphdb.RestGraphDatabase;
+import org.neo4j.rest.graphdb.batch.BatchCallback;
+import org.neo4j.rest.graphdb.query.RestCypherQueryEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.neo4j.support.Neo4jTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
+
+import static org.neo4j.helpers.collection.MapUtil.map;
 
 @Service
 public class ServiceCatalogRepository {
 
+    private static int idx = 0;
+    private final RestGraphDatabase graphDatabase;
     @Autowired
     Neo4jTemplate neo4j;
 
+
     public ServiceCatalogRepository() {
+        graphDatabase = new RestGraphDatabase("http://localhost:7474/db/data/", "neo4j", "servicecatalog");
     }
 
     @Timed
@@ -79,6 +91,49 @@ public class ServiceCatalogRepository {
         ServerInfo server = neo4j.projectTo(node, ServerInfo.class);
 
         return server;
+    }
+
+    @Timed
+    @Transactional
+    public void mergeProcess(ProcessRegistration... registrations){
+        RestAPI api = graphDatabase.getRestAPI();
+        Transaction tx = api.beginTx();
+        api.executeBatch(new BatchCallback<Object>() {
+            @Override
+            public Object recordBatch(RestAPI api) {
+                idx++;
+                for (ProcessRegistration registration : registrations) {
+                    RestCypherQueryEngine engine = new RestCypherQueryEngine(api);
+
+                    String query =
+                            "MERGE (process" + idx + ":ProcessInfo:_ProcessInfo{description:{description}}) ";
+
+                    if(registration.getServer() != null) {
+                        query +=
+                                "MERGE (s" + idx + ":ServerInfo:_ServerInfo{name:{serverName}})" +
+                                "MERGE (s" + idx + ")<-[:RUNS_ON_SERVER]-(process" + idx + ") ";
+                    }
+                    if(registration.getEnvironment() != null){
+                        query += "MERGE (e" + idx + ":EnvironmentInfo:_EnvironmentInfo{name:{environmentName}})" +
+                                "MERGE (e" + idx + ")<-[:RUNS_IN_ENVIRONMENT]-(process" + idx + ") ";
+                    }
+                    if(registration.getApplication() != null){
+                        query += "MERGE (a" + idx + ":ApplicationInfo:_ApplicationInfo{name:{applicationName}})" +
+                                "MERGE (a" + idx + ")<-[:IS_INSTANCE_OF_APPLICATION]-(process" + idx + ") ";
+                    }
+                    Map<String, Object> props = map("description", registration.getDescription(),
+                            "serverName", registration.getServer(),
+                            "environmentName", registration.getEnvironment(),
+                            "applicationName", registration.getApplication()
+                    );
+                    engine.query(query, props);
+                }
+                return null;
+            }
+        });
+        tx.success();
+
+        tx.close();
     }
 
     @Timed
