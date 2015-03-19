@@ -97,7 +97,6 @@ public class ServiceCatalogRepository {
     @Transactional
     public void mergeProcess(ProcessRegistration... registrations){
         RestAPI api = graphDatabase.getRestAPI();
-        Transaction tx = api.beginTx();
         api.executeBatch(new BatchCallback<Object>() {
             @Override
             public Object recordBatch(RestAPI api) {
@@ -131,9 +130,6 @@ public class ServiceCatalogRepository {
                 return null;
             }
         });
-        tx.success();
-
-        tx.close();
     }
 
     @Timed
